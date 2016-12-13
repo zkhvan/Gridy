@@ -598,7 +598,7 @@ IsWindowResizable( WinID ) {
 
 GetSideBorder() {
   SysGet out, 32
-  Return out
+  Return out - 1
 }
 
 GetTopBorder() {
@@ -783,7 +783,7 @@ Return
 HandleEdge( ByRef MyX, ByRef MyY, ByRef MyW, ByRef MyH, Flag=15 ) {
   Global EdgeBehavior
   
-  MonitorNumber := GetMonitorUnderMouse()
+  MonitorNumber := GetMonitorUnderActiveWindow()
   
   SysGet MonitorWorkArea, MonitorWorkArea, %MonitorNumber%
   
@@ -809,7 +809,7 @@ HandleEdge( ByRef MyX, ByRef MyY, ByRef MyW, ByRef MyH, Flag=15 ) {
   }
 
   ; Right
-  Exceed := (MyX + MyW) - MonitorWorkAreaRight
+  Exceed := (MyX + MyW - SideBorder) - MonitorWorkAreaRight
   If( Exceed > 0 ) {
     If( EdgeBehavior == "Shrink" and WindowIsResizable ) {
       If( Flag & 4 )
@@ -819,7 +819,7 @@ HandleEdge( ByRef MyX, ByRef MyY, ByRef MyW, ByRef MyH, Flag=15 ) {
       If( Flag & 1 )
         MyX -= Exceed
       If( Flag & 4 )
-        MyW := MonitorWorkAreaRight - MyX
+        MyW := MonitorWorkAreaRight - MyX + SideBorder
     }
   }
   
@@ -849,11 +849,58 @@ HandleEdge( ByRef MyX, ByRef MyY, ByRef MyW, ByRef MyH, Flag=15 ) {
 ;---------------------------------------------------------------------
 ; Service: Get monitor number under mouse
 ;---------------------------------------------------------------------
+GetMonitorIndexFromWindow(WindowHandle)
+{
+  ; Starts with 1.
+  MonitorIndex := 1
+
+  VarSetCapacity(MonitorInfo, 40)
+  NumPut(40, MonitorInfo)
+
+  if (MonitorHandle := DllCall("MonitorFromWindow", "uint", WindowHandle, "uint", 0x2)) 
+      && DllCall("GetMonitorInfo", "uint", MonitorHandle, "uint", &MonitorInfo) {
+    MonitorLeft   := NumGet(MonitorInfo,  4, "Int")
+    MonitorTop    := NumGet(MonitorInfo,  8, "Int")
+    MonitorRight  := NumGet(MonitorInfo, 12, "Int")
+    MonitorBottom := NumGet(MonitorInfo, 16, "Int")
+    WorkLeft      := NumGet(MonitorInfo, 20, "Int")
+    WorkTop       := NumGet(MonitorInfo, 24, "Int")
+    WorkRight     := NumGet(MonitorInfo, 28, "Int")
+    WorkBottom    := NumGet(MonitorInfo, 32, "Int")
+    IsPrimary     := NumGet(MonitorInfo, 36, "Int") & 1
+
+    SysGet, MonitorCount, MonitorCount
+
+    Loop, %MonitorCount% {
+      SysGet, TempMon, Monitor, %A_Index%
+
+      ; Compare location to determine the monitor index.
+      if ((MonitorLeft = TempMonLeft) and (MonitorTop = TempMonTop)
+	  and (MonitorRight = TempMonRight) and (MonitorBottom = TempMonBottom)) {
+	MonitorIndex := A_Index
+	break
+      }
+    }
+  }
+
+  return MonitorIndex
+}
+
+GetMonitorUnderActiveWindow() {
+  SysGet MonitorCount, MonitorCount
+  If( MonitorCount == 1 ) 
+    Return 1
+
+  WinGet, ActiveWindowId,, A
+
+  Return GetMonitorIndexFromWindow(ActiveWindowId)
+}
+
 GetMonitorUnderMouse() {
   SysGet MonitorCount, MonitorCount
   If( MonitorCount == 1 ) 
     Return 1
-    
+
   ;WinGetPos WX, WY, WW, WH, A    ; Alternative way, using the corner of the window
   CoordMode Mouse, Screen
   MouseGetPos WX, WY
