@@ -8,7 +8,7 @@
 ;   db@sector-seven.net
 ;
 ;=====================================================================
-VersionString = 0.70
+VersionString = 0.80
 NameString    = Gridy
 AuthorString  = Danny Ben Shitrit (Sector-Seven)
 
@@ -28,6 +28,10 @@ CoordMode Mouse, Window
 
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
+
+; Include libraries
+#Include, %A_ScriptDir%\lib\VirtualDesktopAccessor.ahk
+#Include, %A_ScriptDir%\lib\Toast.ahk
 
 ;---------------------------------------------------------------------
 ; Files
@@ -171,12 +175,23 @@ Loop 12 {
         Break
     PresetKeySet := (PresetKeys == "Numpad" ? "Numpad" : PresetKeys == "F Keys" ? "F" : "")
     Hotkey %PresetRestoreKey%%PresetKeySet%%A_Index%, RestorePresetKey
-    Hotkey %PresetStoreKey%%PresetKeySet%%A_Index%, StorePresetKey
+    Hotkey %PresetStoreKey%%PresetKeySet%%A_Index%,   StorePresetKey
 }
 
+;---------------------------------------------------------------------
 ; Invisible border width
+;---------------------------------------------------------------------
 SideBorder := GetSideBorder()
 TopBorder  := GetTopBorder()
+
+;---------------------------------------------------------------------
+; Display virtual desktop number on virtual desktop switch
+;---------------------------------------------------------------------
+OnMessage(GetOnDesktopChangeHandle(), "OnDesktopChange")
+OnDesktopChange(wParam, lParam, msg, hwnd) {
+    ShowTooltip()
+}
+
 
 ;--- END OF AUTO-EXECUTING SECTION -----------------------------------
 Return
@@ -198,31 +213,31 @@ Return
 ; if we captured the ModifierKey, its time to do some (possible) snapping.
 
 ~LButton::
-    if (ModifierKey <> "None") or (DisableKey == "None")
+    If (ModifierKey <> "None") or (DisableKey == "None")
         Return
     Gosub StartResize
 Return
 
 ~#LButton::
-    if (ModifierKey <> "Win") or (DisableKey == "Win")
+    If (ModifierKey <> "Win") or (DisableKey == "Win")
         Return
     Gosub StartResize
 Return
 
 ~!LButton::
-    if (ModifierKey <> "Alt") or (DisableKey == "Alt")
+    If (ModifierKey <> "Alt") or (DisableKey == "Alt")
         Return
     Gosub StartResize
 Return
 
 ~+LButton::
-    if (ModifierKey <> "Shift") or (DisableKey == "Shift")
+    If (ModifierKey <> "Shift") or (DisableKey == "Shift")
         Return
     Gosub StartResize
 Return
 
 ~^LButton::
-    if (ModifierKey <> "Ctrl") or (DisableKey == "Ctrl")
+    If (ModifierKey <> "Ctrl") or (DisableKey == "Ctrl")
         Return
     Gosub StartResize
 Return
@@ -296,7 +311,7 @@ ToggleAlwaysOnTop:
     WinSet AlwaysOnTop,,A
     WinGet ExStyle, ExStyle, A
 
-    if (ExStyle & 0x8)
+    If (ExStyle & 0x8)
         ToolTip Always On Top ON
     else
         ToolTip Always On Top OFF
@@ -311,7 +326,7 @@ ToggleAltTabIcon:
 
     WinGet Style, ExStyle, A
 
-    if (Style & 0x80)
+    If (Style & 0x80)
         ToolTip Alt Tab OFF
     else
         ToolTip Alt Tab ON
@@ -473,7 +488,7 @@ MoveWindow(XOffset, YOffset) {
     WinGetPos WX, WY, WWidth, WHeight, A
 
     WinGet MinMax, MinMax, A
-    if (MinMax <> 0)
+    If (MinMax <> 0)
         Return
 
     WX += SideBorder
@@ -855,7 +870,7 @@ GetMonitorIndexFromWindow(WindowHandle)
     VarSetCapacity(MonitorInfo, 40)
     NumPut(40, MonitorInfo)
 
-    if (MonitorHandle := DllCall("MonitorFromWindow", "uint", WindowHandle, "uint", 0x2))
+    If (MonitorHandle := DllCall("MonitorFromWindow", "uint", WindowHandle, "uint", 0x2))
             && DllCall("GetMonitorInfo", "uint", MonitorHandle, "uint", &MonitorInfo) {
         MonitorLeft   := NumGet(MonitorInfo,  4, "Int")
         MonitorTop    := NumGet(MonitorInfo,  8, "Int")
@@ -873,7 +888,7 @@ GetMonitorIndexFromWindow(WindowHandle)
             SysGet, TempMon, Monitor, %A_Index%
 
             ; Compare location to determine the monitor index.
-            if ((MonitorLeft = TempMonLeft) and (MonitorTop = TempMonTop)
+            If ((MonitorLeft = TempMonLeft) and (MonitorTop = TempMonTop)
             and (MonitorRight = TempMonRight) and (MonitorBottom = TempMonBottom)) {
         MonitorIndex := A_Index
         break
