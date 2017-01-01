@@ -49,6 +49,26 @@ GetCurrentDesktopNumber() {
     return DllCall(GetCurrentDesktopNumberProc)
 }
 
+GetTotalDesktopNumber() {
+    Global GetDesktopCountProc
+
+    return DllCall(GetDesktopCountProc)
+}
+
+MoveCurrentWindowToDesktop(DesktopNumber) {
+    Global MoveWindowToDesktopNumberProc
+
+    WinGet, ActiveHwnd, Id, A
+
+    DllCall(MoveWindowToDesktopNumberProc, UInt, ActiveHwnd, UInt, DesktopNumber)
+}
+
+GoToDesktop(DesktopNumber) {
+    Global GoToDesktopNumberProc
+
+    DllCall(GoToDesktopNumberProc, Int, DesktopNumber)
+}
+
 ; --------------------------------------------------------------------
 ;
 ;     Virtual Desktop Accessor Hooks

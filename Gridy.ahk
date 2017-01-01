@@ -41,36 +41,38 @@ IniFile = %A_ScriptDir%\Gridy.ini
 ;---------------------------------------------------------------------
 ; INI Handling
 ;---------------------------------------------------------------------
-IniRead ModifierKey,           %IniFile%, General,   ModifierKey,           None
-IniRead DisableKey,            %IniFile%, General,   DisableKey,            Shift
-IniRead GridSizeX,             %IniFile%, General,   GridSizeX,             32
-IniRead GridSizeY,             %IniFile%, General,   GridSizeY,             32
-IniRead GridSizes,             %IniFile%, General,   GridSizes,             % "4,8,16,32,64,128"
-IniRead SnapNonResizables,     %IniFile%, General,   SnapNonResizables,     0
-IniRead SizeNonResizables,     %IniFile%, General,   SizeNonResizables,     0
-IniRead ShowWelcomeTip,        %IniFile%, General,   ShowWelcomeTip,        1
-IniRead HomeW,                 %IniFile%, General,   HomeW,                 320
-IniRead HomeH,                 %IniFile%, General,   HomeH,                 320
-IniRead TransLevel,            %IniFile%, General,   TransLevel,            180
-IniRead DisableExitKey,        %IniFile%, General,   DisableExitKey,        0
-IniRead PresetKeys,            %IniFile%, General,   PresetKeys,            Numpad
-IniRead EdgeBehavior,          %IniFile%, General,   EdgeBehavior,          Block
-IniRead MoveLeftKey,           %IniFile%, Hotkeys,   MoveLeftKey,           #Left
-IniRead MoveRightKey,          %IniFile%, Hotkeys,   MoveRightKey,          #Right
-IniRead MoveUpKey,             %IniFile%, Hotkeys,   MoveUpKey,             #Up
-IniRead MoveDownKey,           %IniFile%, Hotkeys,   MoveDownKey,           #Down
-IniRead SizeLeftKey,           %IniFile%, Hotkeys,   SizeLeftKey,           #+Left
-IniRead SizeRightKey,          %IniFile%, Hotkeys,   SizeRightKey,          #+Right
-IniRead SizeUpKey,             %IniFile%, Hotkeys,   SizeUpKey,             #+Up
-IniRead SizeDownKey,           %IniFile%, Hotkeys,   SizeDownKey,           #+Down
-IniRead StoreWinSizeKey,       %IniFile%, Hotkeys,   StoreWinSizeKey,       #+Home
-IniRead RestoreWinSizeKey,     %IniFile%, Hotkeys,   RestoreWinSizeKey,     #Home
-IniRead ToggleAlwaysOnTopKey,  %IniFile%, Hotkeys,   ToggleAlwaysOnTopKey,  #F12
-IniRead ToggleAltTabIconKey,   %IniFile%, Hotkeys,   ToggleAltTabIconKey,   #F11
-IniRead ToggleTransparencyKey, %IniFile%, Hotkeys,   ToggleTransparencyKey, #F10
-IniRead MinimizeAllButMeKey,   %IniFile%, Hotkeys,   MinimizeAllButMeKey,   #PgDn
-IniRead PresetRestoreKey,      %IniFile%, Hotkeys,   PresetRestore,         #!
-IniRead PresetStoreKey,        %IniFile%, Hotkeys,   PresetStore,           #^
+IniRead ModifierKey,           %IniFile%, General, ModifierKey,           None
+IniRead DisableKey,            %IniFile%, General, DisableKey,            Shift
+IniRead GridSizeX,             %IniFile%, General, GridSizeX,             32
+IniRead GridSizeY,             %IniFile%, General, GridSizeY,             32
+IniRead GridSizes,             %IniFile%, General, GridSizes,             % "4,8,16,32,64,128"
+IniRead SnapNonResizables,     %IniFile%, General, SnapNonResizables,     0
+IniRead SizeNonResizables,     %IniFile%, General, SizeNonResizables,     0
+IniRead ShowWelcomeTip,        %IniFile%, General, ShowWelcomeTip,        1
+IniRead HomeW,                 %IniFile%, General, HomeW,                 320
+IniRead HomeH,                 %IniFile%, General, HomeH,                 320
+IniRead TransLevel,            %IniFile%, General, TransLevel,            180
+IniRead DisableExitKey,        %IniFile%, General, DisableExitKey,        0
+IniRead PresetKeys,            %IniFile%, General, PresetKeys,            Numpad
+IniRead EdgeBehavior,          %IniFile%, General, EdgeBehavior,          Block
+IniRead MoveLeftKey,           %IniFile%, Hotkeys, MoveLeftKey,           #Left
+IniRead MoveRightKey,          %IniFile%, Hotkeys, MoveRightKey,          #Right
+IniRead MoveUpKey,             %IniFile%, Hotkeys, MoveUpKey,             #Up
+IniRead MoveDownKey,           %IniFile%, Hotkeys, MoveDownKey,           #Down
+IniRead SizeLeftKey,           %IniFile%, Hotkeys, SizeLeftKey,           #+Left
+IniRead SizeRightKey,          %IniFile%, Hotkeys, SizeRightKey,          #+Right
+IniRead SizeUpKey,             %IniFile%, Hotkeys, SizeUpKey,             #+Up
+IniRead SizeDownKey,           %IniFile%, Hotkeys, SizeDownKey,           #+Down
+IniRead StoreWinSizeKey,       %IniFile%, Hotkeys, StoreWinSizeKey,       #+Home
+IniRead RestoreWinSizeKey,     %IniFile%, Hotkeys, RestoreWinSizeKey,     #Home
+IniRead ToggleAlwaysOnTopKey,  %IniFile%, Hotkeys, ToggleAlwaysOnTopKey,  #F12
+IniRead ToggleAltTabIconKey,   %IniFile%, Hotkeys, ToggleAltTabIconKey,   #F11
+IniRead ToggleTransparencyKey, %IniFile%, Hotkeys, ToggleTransparencyKey, #F10
+IniRead MinimizeAllButMeKey,   %IniFile%, Hotkeys, MinimizeAllButMeKey,   #PgDn
+IniRead PresetRestoreKey,      %IniFile%, Hotkeys, PresetRestore,         #!
+IniRead PresetStoreKey,        %IniFile%, Hotkeys, PresetStore,           #^
+IniRead MoveAndFollowRightKey, %IniFile%, Hotkeys, MoveAndFollowRightKey, #!^Right
+IniRead MoveAndFollowLeftKey,  %IniFile%, Hotkeys, MoveAndFollowLeftKey,  #!^Left
 Loop 12
     IniRead Position%A_Index%, %IniFile%, Positions, Position%A_Index%,     % "0,0,500,500"
 
@@ -156,7 +158,7 @@ If (ShowWelcomeTip) {
 ;---------------------------------------------------------------------
 ; Set Dynamic Hotkeys
 ;---------------------------------------------------------------------
-RoutineString := "MoveLeft,MoveRight,MoveUp,MoveDown,SizeLeft,SizeRight,SizeUp,SizeDown,RestoreWinSize,StoreWinSize,ToggleAlwaysOnTop,ToggleAltTabIcon,ToggleTransparency,MinimizeAllButMe"
+RoutineString := "MoveLeft,MoveRight,MoveUp,MoveDown,SizeLeft,SizeRight,SizeUp,SizeDown,RestoreWinSize,StoreWinSize,ToggleAlwaysOnTop,ToggleAltTabIcon,ToggleTransparency,MinimizeAllButMe,MoveAndFollowRight,MoveAndFollowLeft"
 Loop Parse, RoutineString, `,
 {
     ThisRoutine := A_LoopField
@@ -191,7 +193,6 @@ OnMessage(GetOnDesktopChangeHandle(), "OnDesktopChange")
 OnDesktopChange(wParam, lParam, msg, hwnd) {
     ShowTooltip()
 }
-
 
 ;--- END OF AUTO-EXECUTING SECTION -----------------------------------
 Return
@@ -259,6 +260,14 @@ Return
 
 MoveDown:
     MoveWindow(0, 1)
+Return
+
+MoveAndFollowRight:
+    MoveAndFollowWindow(GetCurrentDesktopNumber() + 1)
+Return
+
+MoveAndFollowLeft:
+    MoveAndFollowWindow(GetCurrentDesktopNumber() - 1)
 Return
 
 ;---------------------------------------------------------------------
@@ -587,6 +596,13 @@ StorePreset(presetId) {
     WinGetPos X,Y,W,H,A
     Position%presetId% = %X%,%Y%,%W%,%H%
     IniWrite % Position%presetId%, %IniFile%, Positions, Position%presetId%
+}
+
+MoveAndFollowWindow(DesktopNumber) {
+    MoveCurrentWindowToDesktop(DesktopNumber)
+    GoToDesktop(DesktopNumber)
+
+    Return
 }
 
 
